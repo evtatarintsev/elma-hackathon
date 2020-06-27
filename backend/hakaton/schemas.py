@@ -21,3 +21,8 @@ class TypeSchema(Schema):
     @post_load
     def make_obj(self, data, **kwargs):
         return Type(**data)
+
+
+class DiffSchema(Schema):
+    saved = fields.List(fields.Nested(ElementSchema), default=[])
+    draft = fields.List(fields.Nested(ElementSchema), default=[])

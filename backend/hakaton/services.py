@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import List
+from typing import Dict, List, Tuple
 
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from .models import Type, BUILTINS, Element
+from .models import Diff, Type, BUILTINS, Element
 from .repository import db_session, TypeDB
+from .schemas import DiffSchema, TypeSchema
 
 
 def get_builtin_types() -> List[Type]:
@@ -71,17 +72,37 @@ def _get_db_type(name: str) -> TypeDB:
     return type_db
 
 
-def update_type(name: str, type: Type) -> Type:
+def update_type(name: str, draft_type: Type) -> Tuple[Dict[str, str], int]:
     """
     Изменение нового пользовательского типа
     Если версия меньше последней то производится проверка на конфликты
     В случае перезаписи одинаковых данных возврщается ошибка marshmallow.ValidationError
 
     """
-    _check_types_exists(type.elements)
+    _check_types_exists(draft_type.elements)
 
-    now = datetime.now()
-    if False:
-        raise ValidationError({'name': 'Название типа изменено до вас'})
+    saved_type = _get_db_type(name)
+    if draft_type.version == saved_type.version:
+        saved_type.elements = draft_type.dump_elements()
+        saved_type.version += 1
+        saved_type.updated = datetime.utcnow()
 
-    return Type(type.name, version=1, updated=now)
+        db_session.commit()
+        return TypeSchema().dump(saved_type.to_type()), 200
+
+    diff = _compare_elements(saved_type.to_type(), draft_type)
+    if diff.is_empty:
+        return TypeSchema().dump(saved_type.to_type()), 200
+
+    return DiffSchema().dump(diff), 400
+
+
+def _compare_elements(saved_type: Type, draft_type: Type) -> Diff:
+    saved_diff, draft_diff = saved_type.elements.copy(), draft_type.elements.copy()
+
+    for el in saved_type.elements:
+        if el in draft_type.elements:
+            saved_diff.remove(el)
+            draft_diff.remove(el)
+
+    return Diff(saved=saved_diff, draft=draft_diff)
