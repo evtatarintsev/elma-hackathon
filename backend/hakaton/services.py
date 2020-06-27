@@ -4,7 +4,7 @@ from typing import List
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from .models import Type, BUILTINS
+from .models import Type, BUILTINS, Element
 from .repository import db_session, TypeDB
 
 
@@ -21,10 +21,20 @@ def get_types() -> List[Type]:
     return get_builtin_types() + get_user_types()
 
 
+def _check_types_exists(elements: List[Element]):
+    for el in elements or []:
+        try:
+            get_type(el.type)
+        except ValidationError:
+            raise ValidationError({'elements': f'для элемента "{el.name}" указан несуществующий тип "{el.type}"'})
+
+
 def create_type(type: Type) -> Type:
     """ Создание нового пользовательского типа версии 1 """
     if type.is_builtin:
         raise ValidationError({'name': 'имя встроенного типа'})
+
+    _check_types_exists(type.elements)
 
     type_db = TypeDB(type)
     db_session.add(type_db)
@@ -67,6 +77,8 @@ def update_type(type: Type) -> Type:
     В случае перезаписи одинаковых данных возврщается ошибка marshmallow.ValidationError
 
     """
+    _check_types_exists(type.elements)
+
     now = datetime.now()
     if False:
         raise ValidationError({'name': 'Название типа изменено до вас'})
