@@ -7,7 +7,7 @@
     <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
         <button mat-icon-button disabled></button>
         <mat-form-field>
-            <mat-label>Element type</mat-label>
+            <mat-label>Тип элемента</mat-label>
             <mat-select #itemType name="type">
                 <mat-option *ngFor="let type of this.types$ | async" [value]="type.name">
                     {{type.name}}
@@ -15,11 +15,11 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Element name</mat-label>
-            <input matInput #itemName placeholder="element name">
+            <mat-label>Название элемента</mat-label>
+            <input matInput #itemName>
         </mat-form-field>
 
-        <button mat-button (click)="saveNode(node, itemType.value, itemName.value)">Save</button>
+        <button mat-button (click)="saveNode(node, itemType.value, itemName.value)">Добавить</button>
     </mat-tree-node>
 
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -34,6 +34,6 @@
     </mat-tree-node>
 </mat-tree>
 
-<button>Сохранить тип</button>
+<button (click)="save()">Сохранить тип</button>
 
 

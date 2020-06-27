@@ -35,11 +35,9 @@ def add_type():
 def update_type(name):
     try:
         draft_type = TypeSchema().load(request.get_json())
-        saved_type = services.update_type(name, draft_type)
+        return services.update_type(name, draft_type)
     except ValidationError as err:
         return err.messages, 400
-
-    return TypeSchema().dump(saved_type)
 
 
 @app.route('/api/types/<string:name>/delete', methods=['DELETE', ])
