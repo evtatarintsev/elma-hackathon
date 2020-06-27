@@ -51,10 +51,7 @@ def delete_type(name: str) -> None:
     if name in BUILTINS:
         raise ValidationError({'name': 'нередактируемый тип'})
 
-    type_db = TypeDB.query.filter(TypeDB.name == name).first()
-    if not type_db:
-        raise ValidationError({'name': 'тип не найден'})
-
+    type_db = _get_db_type(name)
     db_session.delete(type_db)
     db_session.commit()
 
@@ -63,14 +60,18 @@ def get_type(name: str) -> Type:
     if name in BUILTINS:
         return Type(name=name, editable=False)
 
+    return _get_db_type(name).to_type()
+
+
+def _get_db_type(name: str) -> TypeDB:
     type_db = TypeDB.query.filter(TypeDB.name == name).first()
     if not type_db:
         raise ValidationError({'name': 'тип не найден'})
 
-    return type_db.to_type()
+    return type_db
 
 
-def update_type(type: Type) -> Type:
+def update_type(name: str, type: Type) -> Type:
     """
     Изменение нового пользовательского типа
     Если версия меньше последней то производится проверка на конфликты
