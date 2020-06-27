@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 
+from flask_sqlalchemy import BaseQuery
 from sqlalchemy import (
     DateTime,
     create_engine,
@@ -24,6 +25,7 @@ Base.query = db_session.query_property()
 
 class TypeDB(Base):
     __tablename__ = 'types'
+    query: BaseQuery
     id = Column(Integer, primary_key=True)
     name = Column(String(), unique=True)
     elements = Column(String(), default='{}')
@@ -32,9 +34,9 @@ class TypeDB(Base):
 
     def __init__(self, t: Type):
         self.name = t.name
-        self.elements = json.dumps(t.elements)
+        self.elements = json.dumps([{"name": el.name, "type": el.type} for el in t.elements])
 
-    def to_type(self):
+    def to_type(self) -> Type:
         return Type(
             name=self.name,
             elements=[Element(name=el['name'], type=el['type']) for el in json.loads(self.elements)],

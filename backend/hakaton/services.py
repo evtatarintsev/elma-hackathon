@@ -2,8 +2,10 @@ from datetime import datetime
 from typing import List
 
 from marshmallow import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from .models import Type, Element
+from .repository import db_session, TypeDB
 
 
 def get_builtin_types() -> List[Type]:
@@ -17,19 +19,7 @@ def get_builtin_types() -> List[Type]:
 
 def get_user_types() -> List[Type]:
     """ Возвращает сохраненные пользовательские типы """
-    return [
-        Type(
-            name='Person',
-            elements=[
-                Element(name='firstName', type='string'),
-                Element(name='lastName', type='string'),
-                Element(name='middleName', type='string'),
-                Element(name='Age', type='integer'),
-            ],
-            version=1,
-            updated=datetime.now(),
-        ),
-    ]
+    return [t.to_type() for t in TypeDB.query.all()]
 
 
 def get_types() -> List[Type]:
@@ -38,9 +28,15 @@ def get_types() -> List[Type]:
 
 def create_type(type: Type) -> Type:
     """ Создание нового пользовательского типа версии 1 """
-    now = datetime.now()
+    type_db = TypeDB(type)
+    db_session.add(type_db)
 
-    return Type(type.name, version=1, updated=now)
+    try:
+        db_session.commit()
+    except IntegrityError:
+        raise ValidationError({'name': 'тип уже существует'})
+
+    return type_db.to_type()
 
 
 def delete_type(name: str) -> None:
