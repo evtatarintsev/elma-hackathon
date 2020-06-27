@@ -3,8 +3,22 @@ import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
-import {FormControl} from '@angular/forms';
 import {SchemaService} from '../shared/schema.service';
+
+
+export interface Element {
+  name: string;
+  type: string;
+}
+
+export interface xsdType {
+  name: string;
+  elements?: Element[];
+  editable?: boolean;
+  version: number;
+  updated?: Date;
+}
+
 
 /**
  * Node for to-do item
@@ -81,9 +95,9 @@ export class ChecklistDatabase {
   }
 
   /** Add an item to to-do list */
-  insertItem(parent: TodoItemNode, name: string): void{
+  insertItem(parent: TodoItemNode, el: Element): void{
     if (parent.children) {
-      parent.children.push({item: name} as TodoItemNode);
+      parent.children.push({item: el.name} as TodoItemNode);
       this.dataChange.next(this.data);
     }
   }
@@ -124,8 +138,13 @@ export class SchemaComponent implements OnInit{
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  element: string;
-  elements: string[];
+  element: Element = {
+    type: '',
+    name: '',
+  };
+
+  elements: Element[];
+  types: xsdType[];
 
   constructor(
       private _database: ChecklistDatabase,
@@ -142,7 +161,7 @@ export class SchemaComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.elements = this.schemaService.elements;
+    this.types = this.schemaService.types;
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;
@@ -174,7 +193,7 @@ export class SchemaComponent implements OnInit{
   /** Select the category so we can insert the new item. */
   addNewItem(node: TodoItemFlatNode): void {
     const parentNode = this.flatNodeMap.get(node);
-    this._database.insertItem(parentNode!, '');
+    this._database.insertItem(parentNode!, {name:'', type:''});
     this.treeControl.expand(node);
   }
 

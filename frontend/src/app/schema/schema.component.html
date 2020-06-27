@@ -7,13 +7,15 @@
   <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
     <button mat-icon-button disabled></button>
     <mat-form-field>
-      <mat-label>New item...</mat-label>
-      <mat-select #itemValue [(ngModel)]="element" name="food">
-        <mat-option *ngFor="let element of elements" [value]="element">
-          {{element}}
+      <mat-label>Element type</mat-label>
+      <mat-select #itemValue name="type">
+        <mat-option *ngFor="let type of types" [value]="type.name">
+          {{type.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+
     <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
   </mat-tree-node>
 
