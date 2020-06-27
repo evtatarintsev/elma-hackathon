@@ -8,7 +8,11 @@
     <button mat-icon-button disabled></button>
     <mat-form-field>
       <mat-label>New item...</mat-label>
-      <input matInput #itemValue placeholder="Ex. Lettuce">
+      <mat-select #itemValue [(ngModel)]="element" name="food">
+        <mat-option *ngFor="let element of elements" [value]="element">
+          {{element}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
   </mat-tree-node>

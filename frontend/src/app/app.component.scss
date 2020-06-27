@@ -1,0 +1,18 @@
+h1, h2 {
+  text-align: center;
+}
+
+.container{
+  display: flex;
+  flex-direction: row;
+
+}
+
+.schema{
+    width: 50%;
+    border-right: 2px solid;
+}
+
+.sidebar{
+  width: 50%;
+}
