@@ -219,21 +219,22 @@ export class SchemaComponent implements OnInit{
   }
 
   save() {
-    const type = this.dataSource.data[0].item;
+    const element = this.dataSource.data[0].item;
+    const t: Type = {
+      name: element.type,
+      elements: this.dataSource.data[0].children.map(item => item.item),
+      version: 0,
+    };
 
-    // вызываем создание если версия ноль, хз как ее получить
-    this.apiService.createType({
-      name: type.name,
-      elements: this.dataSource.data[0].children.map(item => item.item)
-    });
+    this.apiService.createType(t).subscribe(() => document.location.reload(true));
 
-    // это надо будет вызвать если версия больше нуля
-    if (false){
-      this.apiService.updateType({
-        name: type.name,
-        elements: this.dataSource.data[0].children.map(item => item.item)
-      });
-    }
+    // // это надо будет вызвать если версия больше н уля
+    // if (false){
+    //   this.apiService.updateType({
+    //     name: type.name,
+    //     elements: this.dataSource.data[0].children.map(item => item.item)
+    //   });
+    // }
 
 
   }

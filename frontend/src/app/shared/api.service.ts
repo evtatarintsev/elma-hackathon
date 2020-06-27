@@ -28,15 +28,13 @@ export class ApiService {
     }
 
     public createType(newType: Type): Observable<Type> {
-        console.log(newType);
-        return this.http.post<GetTypeResponse>('/api/types', JSON.stringify(newType))
+        return this.http.post<GetTypeResponse>('/api/types', JSON.stringify(newType), {headers: {['content-type']: 'application/json'}})
             .pipe(
                 map(({ type }) => type),
             );
     }
 
     public updateType(newType: Type): Observable<Type> {
-        console.log(newType);
         return this.http.put<GetTypeResponse>(`/api/types/${newType.name}/update`, JSON.stringify(newType))
             .pipe(
                 map(({ type }) => type),
