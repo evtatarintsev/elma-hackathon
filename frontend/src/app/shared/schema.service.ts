@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {TodoItemNode} from '../schema/schema.component';
+import {Type} from '../models/type'
 
 @Injectable({
         providedIn: 'root',
 })
 export class SchemaService {
-    elements: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+    types: Type[] = [];
     private dataChange = new BehaviorSubject<TodoItemNode[]>([]);
     xsdType$ = new BehaviorSubject<{[key: string]: any}>({});
 

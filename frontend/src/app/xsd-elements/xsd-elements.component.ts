@@ -13,6 +13,7 @@ import { ApiService } from '../shared/api.service';
 })
 export class XsdElementsComponent implements OnInit {
 
+  xsdTypes: Type[];
   elements: string[];
   types$: Observable<Array<Type>>;
 
@@ -24,7 +25,6 @@ export class XsdElementsComponent implements OnInit {
 
   ngOnInit(): void {
     this.types$ = this.apiService.getTypes();
-    this.elements = this.schemaService.elements;
   }
 
   addNewElement(): void {

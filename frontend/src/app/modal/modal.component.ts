@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SchemaService} from '../shared/schema.service';
 import {FormControl} from '@angular/forms';
+import {Type} from '../models/type';
 
 @Component({
   selector: 'app-modal',
@@ -18,8 +19,12 @@ export class ModalComponent implements OnInit {
   }
 
   addType(): void{
-    this.schemaService.elements.push(this.xsdType.value);
-    this.schemaService.xsdType$.next({[this.xsdType.value]: {}})
+    const type: Type = {
+      name: this.xsdType.value,
+      version: 0,
+    };
+    this.schemaService.types.push(type);
+    this.schemaService.xsdType$.next({[type.name]: {}});
   }
 
 }
