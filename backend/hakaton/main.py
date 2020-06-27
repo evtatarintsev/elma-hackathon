@@ -1,8 +1,11 @@
+import click
+
 from flask import Flask
 from flask import request
+from flask.cli import with_appcontext
 from marshmallow import ValidationError
 
-from . import services
+from . import repository, services
 from .schemas import TypeSchema
 
 app = Flask(__name__)
@@ -48,3 +51,19 @@ def export_type(name: str):
     return {
 
     }
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    repository.db_session.remove()
+
+
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+    """Clear the existing data and create new tables."""
+    repository.init_db()
+    click.echo('Initialized the database.')
+
+
+app.cli.add_command(init_db_command)
