@@ -1,4 +1,9 @@
 <mat-list>
-    <mat-list-item *ngFor="let type of (types$ | async)">{{type.name}}</mat-list-item>
+    <mat-list-item *ngFor="let type of (types$ | async)">
+        {{type.name}}
+        <a *ngIf="type.editable" href="/api/types/{{type.name}}/export/xsd/save">
+            <mat-icon>save</mat-icon>
+        </a>
+    </mat-list-item>
 </mat-list>
 <button mat-icon-button (click)="addNewElement()"><mat-icon>add</mat-icon> Добавить элемент</button>
