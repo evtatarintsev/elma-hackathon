@@ -14,25 +14,15 @@ import {Type} from '../models/type'
  */
 export class TodoItemNode {
   children: TodoItemNode[];
-  item: string;
+  item: Element;
 }
 
 /** Flat to-do item node with expandable and level information */
 export class TodoItemFlatNode {
-  item: string;
+  item: Element;
   level: number;
   expandable: boolean;
 }
-
-/**
- * The Json object for to-do list data.
- */
-const TREE_DATA = {
-  Groceries: {
-    test: {},
-    test2: null
-  },
-};
 
 /**
  * Checklist database, it can build a tree structured Json object.
@@ -69,7 +59,10 @@ export class ChecklistDatabase {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
       const node = new TodoItemNode();
-      node.item = key;
+      node.item = {
+        type: key,
+        name: ''
+      };
 
       if (value != null) {
         if (typeof value === 'object') {
@@ -86,13 +79,19 @@ export class ChecklistDatabase {
   /** Add an item to to-do list */
   insertItem(parent: TodoItemNode, el: Element): void{
     if (parent.children) {
-      parent.children.push({item: el.name} as TodoItemNode);
+      parent.children.push({
+        item: {
+          type: el.type,
+          name: el.name
+        }
+      } as TodoItemNode);
       this.dataChange.next(this.data);
     }
   }
 
-  updateItem(node: TodoItemNode, name: string) {
-    node.item = name;
+  updateItem(node: TodoItemNode, item: Element) {
+    debugger;
+    node.item = item;
     this.dataChange.next(this.data);
   }
 }
@@ -158,14 +157,14 @@ export class SchemaComponent implements OnInit{
 
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === {type:'', name:''};
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
   transformer = (node: TodoItemNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode = existingNode && existingNode.item === node.item
+    const flatNode = existingNode && existingNode.item.type === node.item.type
       ? existingNode
       : new TodoItemFlatNode();
     flatNode.item = node.item;
@@ -184,8 +183,11 @@ export class SchemaComponent implements OnInit{
   }
 
   /** Save the node to database */
-  saveNode(node: TodoItemFlatNode, itemValue: string): void {
+  saveNode(node: TodoItemFlatNode, itemType: string, itemName: string): void {
     const nestedNode = this.flatNodeMap.get(node);
-    this._database.updateItem(nestedNode!, itemValue);
+    this._database.updateItem(nestedNode!, {
+      type: itemType,
+      name: itemName,
+    });
   }
 }
