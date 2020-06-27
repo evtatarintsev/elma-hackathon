@@ -4,16 +4,8 @@ from typing import List
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from .models import Type
+from .models import Type, BUILTINS
 from .repository import db_session, TypeDB
-
-
-BUILTINS = [
-    'number',
-    'decimal',
-    'string',
-    'boolean',
-]
 
 
 def get_builtin_types() -> List[Type]:
@@ -31,7 +23,7 @@ def get_types() -> List[Type]:
 
 def create_type(type: Type) -> Type:
     """ Создание нового пользовательского типа версии 1 """
-    if type.name in BUILTINS:
+    if type.is_builtin:
         raise ValidationError({'name': 'имя встроенного типа'})
 
     type_db = TypeDB(type)

@@ -3,6 +3,14 @@ from datetime import datetime
 from typing import List
 
 
+BUILTINS = [
+    'number',
+    'decimal',
+    'string',
+    'boolean',
+]
+
+
 @dataclass
 class Element:
     name: str
@@ -16,3 +24,7 @@ class Type:
     editable: bool = True
     version: int = 0
     updated: datetime = None
+
+    @property
+    def is_builtin(self):
+        return self.name in BUILTINS

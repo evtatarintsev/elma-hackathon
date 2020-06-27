@@ -9,6 +9,7 @@ verify_ssl = true
 flask = "==1.1.2"
 flask-sqlalchemy = "==2.4.3"
 marshmallow = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8.2"
