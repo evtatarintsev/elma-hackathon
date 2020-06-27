@@ -8,6 +8,7 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
+    Text,
 )
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -28,13 +29,13 @@ class TypeDB(Base):
     query: BaseQuery
     id = Column(Integer, primary_key=True)
     name = Column(String(), unique=True)
-    elements = Column(String(), default='{}')
+    elements = Column(Text, default='{}')
     version = Column(Integer, default=0)
     updated = Column(DateTime, default=datetime.utcnow())
 
     def __init__(self, t: Type):
         self.name = t.name
-        self.elements = json.dumps([{"name": el.name, "type": el.type} for el in t.elements])
+        self.elements = t.dump_elements()
 
     def to_type(self) -> Type:
         return Type(
