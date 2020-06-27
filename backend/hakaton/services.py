@@ -71,17 +71,26 @@ def _get_db_type(name: str) -> TypeDB:
     return type_db
 
 
-def update_type(name: str, type: Type) -> Type:
+def update_type(name: str, draft_type: Type) -> Type:
     """
     Изменение нового пользовательского типа
     Если версия меньше последней то производится проверка на конфликты
     В случае перезаписи одинаковых данных возврщается ошибка marshmallow.ValidationError
 
     """
-    _check_types_exists(type.elements)
+    _check_types_exists(draft_type.elements)
+
+    saved_type = _get_db_type(name)
+    if draft_type.version == saved_type.version:
+        saved_type.elements = draft_type.dump_elements()
+        saved_type.version += 1
+        saved_type.updated = datetime.utcnow()
+
+        db_session.commit()
+        return saved_type.to_type()
 
     now = datetime.now()
     if False:
         raise ValidationError({'name': 'Название типа изменено до вас'})
 
-    return Type(type.name, version=1, updated=now)
+    return Type(draft_type.name, version=1, updated=now)
