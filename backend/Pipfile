@@ -7,6 +7,7 @@ verify_ssl = true
 
 [packages]
 flask = "==1.1.2"
+marshmallow = "*"
 
 [requires]
 python_version = "3.8.2"
