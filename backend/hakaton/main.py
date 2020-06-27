@@ -42,7 +42,10 @@ def update_type(name):
 
 @app.route('/api/types/<string:name>/delete', methods=['DELETE', ])
 def delete_type(name: str):
-    services.delete_type(name)
+    try:
+        services.delete_type(name)
+    except ValidationError as err:
+        return err.messages, 400
     return {}, 204
 
 

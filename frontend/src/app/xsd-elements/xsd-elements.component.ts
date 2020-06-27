@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {SchemaService} from '../shared/schema.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalComponent} from '../modal/modal.component';
+import { Observable } from 'rxjs';
+import { Type } from '../models/type';
+import { ApiService } from '../shared/api.service';
 
 @Component({
   selector: 'app-xsd-elements',
@@ -11,13 +14,16 @@ import {ModalComponent} from '../modal/modal.component';
 export class XsdElementsComponent implements OnInit {
 
   elements: string[];
+  types$: Observable<Array<Type>>;
 
   constructor(
       private schemaService: SchemaService,
       private dialog: MatDialog,
+      private apiService: ApiService,
   ) { }
 
   ngOnInit(): void {
+    this.types$ = this.apiService.getTypes();
     this.elements = this.schemaService.elements;
   }
 

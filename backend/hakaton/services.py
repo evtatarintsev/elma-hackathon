@@ -4,17 +4,20 @@ from typing import List
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
-from .models import Type, Element
+from .models import Type
 from .repository import db_session, TypeDB
 
 
+BUILTINS = [
+    'number',
+    'decimal',
+    'string',
+    'boolean',
+]
+
+
 def get_builtin_types() -> List[Type]:
-    return [
-        Type(name='number', editable=False),
-        Type(name='decimal', editable=False),
-        Type(name='string', editable=False),
-        Type(name='boolean', editable=False),
-    ]
+    return [Type(name=b, editable=False) for b in BUILTINS]
 
 
 def get_user_types() -> List[Type]:
@@ -28,6 +31,9 @@ def get_types() -> List[Type]:
 
 def create_type(type: Type) -> Type:
     """ Создание нового пользовательского типа версии 1 """
+    if type.name in BUILTINS:
+        raise ValidationError({'name': 'имя встроенного типа'})
+
     type_db = TypeDB(type)
     db_session.add(type_db)
 
@@ -40,11 +46,26 @@ def create_type(type: Type) -> Type:
 
 
 def delete_type(name: str) -> None:
-    return
+    if name in BUILTINS:
+        raise ValidationError({'name': 'нередактируемый тип'})
+
+    type_db = TypeDB.query.filter(TypeDB.name == name).first()
+    if not type_db:
+        raise ValidationError({'name': 'тип не найден'})
+
+    db_session.delete(type_db)
+    db_session.commit()
 
 
-def get_type(name) -> Type:
-    return Type(name=name)
+def get_type(name: str) -> Type:
+    if name in BUILTINS:
+        return Type(name=name, editable=False)
+
+    type_db = TypeDB.query.filter(TypeDB.name == name).first()
+    if not type_db:
+        raise ValidationError({'name': 'тип не найден'})
+
+    return type_db.to_type()
 
 
 def update_type(type: Type) -> Type:
