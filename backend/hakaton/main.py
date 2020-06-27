@@ -51,10 +51,11 @@ def delete_type(name: str):
 
 @app.route('/api/types/<string:name>/export/xsd', methods=['GET', ])
 def export_type(name: str):
-    type = services.get_types()[-1]
+    type = services.get_type(name)
     response = make_response(to_xsd(type))
     response.headers['Content-Type'] = 'application/xml'
     return response
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
