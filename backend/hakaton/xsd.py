@@ -42,7 +42,7 @@ def make_xsd(type: Type, root: ETree.Element, ns) -> str:
         root.append(element)
 
         el_type = get_type(el.type)
-        if not type.is_builtin and el.type not in declared_types:
+        if not el_type.is_builtin and el.type not in declared_types:
             declared_types.append(el.type)
             make_complex_types(root, el_type, ns, declared_types)
 
