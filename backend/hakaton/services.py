@@ -67,7 +67,7 @@ def get_type(name: str) -> Type:
 def _get_db_type(name: str) -> TypeDB:
     type_db = TypeDB.query.filter(TypeDB.name == name).first()
     if not type_db:
-        raise ValidationError({'name': 'тип не найден'})
+        raise ValidationError({'name': f'тип "{name}" не найден'})
 
     return type_db
 

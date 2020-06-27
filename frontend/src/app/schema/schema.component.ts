@@ -32,14 +32,16 @@ export class TodoItemFlatNode {
 @Injectable()
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<TodoItemNode[]>([]);
+  types$ = new BehaviorSubject<Array<Type>>([]);
 
   get data(): TodoItemNode[] { return this.dataChange.value; }
 
   constructor(
       private schemaService: SchemaService,
+      private api: ApiService,
   ) {
     schemaService.xsdType$.subscribe((xsdType) => this.initialize(xsdType));
-
+    api.getTypes().subscribe(types => this.types$.next(types))
   }
 
   initialize(xsdType: {[key: string]: any}) {
@@ -89,8 +91,14 @@ export class ChecklistDatabase {
     }
   }
 
-  updateItem(node: TodoItemNode, item: Element) {
+  updateItem(node: TodoItemNode | TodoItemFlatNode, item: Element) {
+    const type = this.types$.getValue().find(t => t.name == item.type);
+    if (type && type.elements && type.elements.length ) {
+      node = <TodoItemNode>node;
+      node.children = type.elements.map(el => ({item: {name:el.name, type:el.type}, children: undefined}))
+    }
     node.item = item;
+
     this.dataChange.next(this.data);
   }
 }

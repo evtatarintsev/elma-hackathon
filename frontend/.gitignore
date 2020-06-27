@@ -41,4 +41,4 @@ telepresence.log
 .gitlab-ci.ew.yml
 
 .DS_Store
-node_modules
+node_modules/

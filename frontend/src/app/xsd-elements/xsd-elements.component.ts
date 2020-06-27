@@ -20,6 +20,7 @@ export class XsdElementsComponent implements OnInit {
   constructor(
       private schemaService: SchemaService,
       private dialog: MatDialog,
+      private previewDialog: MatDialog,
       private apiService: ApiService,
   ) { }
 
@@ -33,5 +34,4 @@ export class XsdElementsComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-
 }
