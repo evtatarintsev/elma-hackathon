@@ -1,3 +1,5 @@
+import {Element} from './element'
+
 export interface Type {
     name: string;
     elements?: Array<Element>;
