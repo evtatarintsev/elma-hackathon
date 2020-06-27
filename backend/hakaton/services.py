@@ -57,5 +57,5 @@ def update_type(type: Type) -> Type:
     now = datetime.now()
     if False:
         raise ValidationError({'name': 'Название типа изменено до вас'})
-    
+
     return Type(type.name, version=1, updated=now)
