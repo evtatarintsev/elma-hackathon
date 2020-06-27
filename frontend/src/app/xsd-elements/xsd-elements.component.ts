@@ -34,9 +34,4 @@ export class XsdElementsComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-  preview(): void {
-    const dialogRef = this.previewDialog.open(ModalComponent);
-  }
-
 }
