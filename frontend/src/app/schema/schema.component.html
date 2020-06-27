@@ -29,7 +29,7 @@
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon>
         </button>
-        <span class="item-node">{{node.item.type}} {{node.item.level}}</span>
+        <span class="item-node">{{node.item.type}} {{node.item.name}}</span>
         <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
     </mat-tree-node>
 </mat-tree>
