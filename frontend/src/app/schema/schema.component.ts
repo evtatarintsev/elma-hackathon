@@ -5,8 +5,8 @@ import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SchemaService} from '../shared/schema.service';
 import {ApiService} from '../shared/api.service';
-import {Element} from '../models/element'
-import {Type} from '../models/type'
+import {Element} from '../models/element';
+import {Type} from '../models/type';
 
 
 /**
@@ -196,5 +196,25 @@ export class SchemaComponent implements OnInit{
       type: itemType,
       name: itemName,
     });
+  }
+
+  save() {
+    const type = this.dataSource.data[0].item;
+
+    // вызываем создание если версия ноль, хз как ее получить
+    this.apiService.createType({
+      name: type.name,
+      elements: this.dataSource.data[0].children.map(item => item.item)
+    });
+
+    // это надо будет вызвать если версия больше нуля
+    if (false){
+      this.apiService.updateType({
+        name: type.name,
+        elements: this.dataSource.data[0].children.map(item => item.item)
+      });
+    }
+
+
   }
 }

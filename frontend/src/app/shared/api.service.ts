@@ -10,6 +10,10 @@ interface GetTypesResponse {
     types: Array<Type>;
 }
 
+interface GetTypeResponse {
+    type: Type;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -20,6 +24,22 @@ export class ApiService {
         return this.http.get<GetTypesResponse>('/api/types')
             .pipe(
                 map(({ types }) => types),
+            );
+    }
+
+    public createType(newType: Type): Observable<Type> {
+        console.log(newType);
+        return this.http.post<GetTypeResponse>('/api/types', JSON.stringify(newType))
+            .pipe(
+                map(({ type }) => type),
+            );
+    }
+
+    public updateType(newType: Type): Observable<Type> {
+        console.log(newType);
+        return this.http.put<GetTypeResponse>(`/api/types/${newType.name}/update`, JSON.stringify(newType))
+            .pipe(
+                map(({ type }) => type),
             );
     }
 }
