@@ -218,7 +218,7 @@ export class SchemaComponent implements OnInit{
     });
   }
 
-  save() {
+  async save() {
     const element = this.dataSource.data[0].item;
     const t: Type = {
       name: element.type,
@@ -226,7 +226,7 @@ export class SchemaComponent implements OnInit{
       version: 0,
     };
 
-    this.apiService.createType(t).subscribe(() => document.location.reload(true));
+    this.apiService.createType(t).subscribe(() => this.types$ = this.apiService.getTypes() );
 
     // // это надо будет вызвать если версия больше н уля
     // if (false){

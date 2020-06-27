@@ -40,4 +40,11 @@ export class ApiService {
                 map(({ type }) => type),
             );
     }
+
+    public deleteType(newType: Type): Observable<Type> {
+        return this.http.delete<GetTypeResponse>(`/api/types/${newType.name}/delete`)
+            .pipe(
+                map(({ type }) => type),
+            );
+    }
 }
