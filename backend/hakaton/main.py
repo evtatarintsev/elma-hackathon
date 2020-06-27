@@ -1,12 +1,12 @@
 import click
-
 from flask import Flask
-from flask import request
+from flask import request, make_response
 from flask.cli import with_appcontext
 from marshmallow import ValidationError
 
 from . import repository, services
 from .schemas import TypeSchema
+from .xsd import to_xsd
 
 app = Flask(__name__)
 
@@ -51,10 +51,10 @@ def delete_type(name: str):
 
 @app.route('/api/types/<string:name>/export/xsd', methods=['GET', ])
 def export_type(name: str):
-    return {
-
-    }
-
+    type = services.get_types()[-1]
+    response = make_response(to_xsd(type))
+    response.headers['Content-Type'] = 'application/xml'
+    return response
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
