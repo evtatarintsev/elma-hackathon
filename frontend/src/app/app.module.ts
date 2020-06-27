@@ -48,12 +48,14 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { XsdElementsComponent } from './xsd-elements/xsd-elements.component';
+import { ModalComponent } from './modal/modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SchemaComponent,
     XsdElementsComponent,
+    ModalComponent,
   ],
   imports: [
     ReactiveFormsModule,
