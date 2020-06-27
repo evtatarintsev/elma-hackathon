@@ -1,8 +1,10 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, Injectable} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import {BehaviorSubject} from 'rxjs';
+import {FormControl} from '@angular/forms';
+import {SchemaService} from '../shared/schema.service';
 
 /**
  * Node for to-do item
@@ -109,10 +111,9 @@ export class ChecklistDatabase {
   styleUrls: ['schema.component.scss'],
   providers: [ChecklistDatabase]
 })
-export class SchemaComponent {
+export class SchemaComponent implements OnInit{
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
-
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   nestedNodeMap = new Map<TodoItemNode, TodoItemFlatNode>();
 
@@ -131,7 +132,13 @@ export class SchemaComponent {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor(private _database: ChecklistDatabase) {
+  element: string;
+  elements: string[];
+
+  constructor(
+      private _database: ChecklistDatabase,
+      private schemaService: SchemaService,
+  ) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -140,6 +147,10 @@ export class SchemaComponent {
     _database.dataChange.subscribe(data => {
       this.dataSource.data = data;
     });
+  }
+
+  ngOnInit(): void {
+    this.elements = this.schemaService.elements;
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;

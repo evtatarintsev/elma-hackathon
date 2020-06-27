@@ -1,0 +1,43 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+/build
+/env
+__pycache__/
+*.egg-info/
+diff-quality.html
+diff-cover.html
+# Test binary, build with `go test -c`
+*.test
+.coverage
+coverage.xml
+htmlcov/
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.coverprofile
+
+# Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
+.glide/
+
+.idea
+
+# Virtualenv
+/.venv
+
+# Direnv file
+.envrc
+.python-version
+
+# Run log
+run.log
+
+#json
+package.json
+
+#log
+telepresence.log
+.git_ew
+.gitlab-ci.ew.yml
+
+.DS_Store
