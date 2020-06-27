@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Добавить новый тип</h2>
+<mat-dialog-content class="mat-typography">
+    <input type="text" [formControl]="xsdType">
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Отмена</button>
+    <button type="submit" mat-button [mat-dialog-close]="true" (click)="addType()" cdkFocusInitial>Добавить</button>
+</mat-dialog-actions>
