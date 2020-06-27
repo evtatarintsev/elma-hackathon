@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+import json
 from typing import List
 
 
@@ -28,3 +29,6 @@ class Type:
     @property
     def is_builtin(self):
         return self.name in BUILTINS
+
+    def dump_elements(self) -> str:
+        return json.dumps([{"name": el.name, "type": el.type} for el in self.elements])
