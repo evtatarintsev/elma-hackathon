@@ -91,11 +91,31 @@ export class ChecklistDatabase {
     }
   }
 
+  getChildren(type: Type) {
+    const result: TodoItemNode[] = [];
+
+    if (type && type.elements && type.elements.length ) {
+      for (const el of type.elements) {
+        const tp = this.types$.getValue().find(t => t.name == el.type);
+
+        if (!type || !type.elements || !type.elements.length )
+          return undefined;
+
+        const child = this.getChildren(tp);
+        result.push({
+          item: {name:el.name, type:el.type},
+          children: this.getChildren(tp),
+        });
+      }
+    }
+    return result.length ? result: undefined;
+  }
+
   updateItem(node: TodoItemNode | TodoItemFlatNode, item: Element) {
     const type = this.types$.getValue().find(t => t.name == item.type);
     if (type && type.elements && type.elements.length ) {
       node = <TodoItemNode>node;
-      node.children = type.elements.map(el => ({item: {name:el.name, type:el.type}, children: undefined}))
+      node.children = this.getChildren(type)
     }
     node.item = item;
 
