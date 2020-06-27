@@ -19,6 +19,7 @@ export class ModalComponent implements OnInit {
 
   addType(): void{
     this.schemaService.elements.push(this.xsdType.value);
+    this.schemaService.xsdType$.next({[this.xsdType.value]: {}})
   }
 
 }
