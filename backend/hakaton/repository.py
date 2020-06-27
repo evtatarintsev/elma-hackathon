@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 
+from flask_sqlalchemy import BaseQuery
 from sqlalchemy import (
     DateTime,
     create_engine,
@@ -24,6 +25,7 @@ Base.query = db_session.query_property()
 
 class TypeDB(Base):
     __tablename__ = 'types'
+    query: BaseQuery
     id = Column(Integer, primary_key=True)
     name = Column(String(), unique=True)
     elements = Column(String(), default='{}')

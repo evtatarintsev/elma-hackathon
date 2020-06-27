@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 
-from flask import abort
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
@@ -20,19 +19,7 @@ def get_builtin_types() -> List[Type]:
 
 def get_user_types() -> List[Type]:
     """ Возвращает сохраненные пользовательские типы """
-    return [
-        Type(
-            name='Person',
-            elements=[
-                Element(name='firstName', type='string'),
-                Element(name='lastName', type='string'),
-                Element(name='middleName', type='string'),
-                Element(name='Age', type='integer'),
-            ],
-            version=1,
-            updated=datetime.now(),
-        ),
-    ]
+    return [t.to_type() for t in TypeDB.query.all()]
 
 
 def get_types() -> List[Type]:
