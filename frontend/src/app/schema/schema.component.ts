@@ -157,7 +157,7 @@ export class SchemaComponent implements OnInit{
 
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === {type:'', name:''};
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item.type === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
