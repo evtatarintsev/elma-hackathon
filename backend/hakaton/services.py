@@ -1,9 +1,12 @@
 from datetime import datetime
 from typing import List
 
+from flask import abort
 from marshmallow import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from .models import Type, Element
+from .repository import db_session, TypeDB
 
 
 def get_builtin_types() -> List[Type]:
@@ -38,9 +41,15 @@ def get_types() -> List[Type]:
 
 def create_type(type: Type) -> Type:
     """ Создание нового пользовательского типа версии 1 """
-    now = datetime.now()
+    type_db = TypeDB(type)
+    db_session.add(type_db)
 
-    return Type(type.name, version=1, updated=now)
+    try:
+        db_session.commit()
+    except IntegrityError:
+        raise ValidationError({'name': 'тип уже существует'})
+
+    return type_db.to_type()
 
 
 def delete_type(name: str) -> None:

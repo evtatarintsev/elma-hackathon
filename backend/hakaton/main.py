@@ -22,10 +22,10 @@ def get_types():
 def add_type():
     try:
         new_type = TypeSchema().load(request.get_json())
+        saved_type = services.create_type(new_type)
     except ValidationError as err:
         return err.messages, 400
 
-    saved_type = services.create_type(new_type)
     return TypeSchema().dump(saved_type)
 
 

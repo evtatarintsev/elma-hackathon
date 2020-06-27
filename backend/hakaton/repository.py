@@ -32,9 +32,9 @@ class TypeDB(Base):
 
     def __init__(self, t: Type):
         self.name = t.name
-        self.elements = json.dumps(t.elements)
+        self.elements = json.dumps([{"name": el.name, "type": el.type} for el in t.elements])
 
-    def to_type(self):
+    def to_type(self) -> Type:
         return Type(
             name=self.name,
             elements=[Element(name=el['name'], type=el['type']) for el in json.loads(self.elements)],
