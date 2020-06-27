@@ -2,9 +2,10 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {FormControl} from '@angular/forms';
 import {SchemaService} from '../shared/schema.service';
+import {ApiService} from '../shared/api.service';
 
 /**
  * Node for to-do item
@@ -126,10 +127,11 @@ export class SchemaComponent implements OnInit{
 
   element: string;
   elements: string[];
-
+  
   constructor(
       private _database: ChecklistDatabase,
       private schemaService: SchemaService,
+      private apiService: ApiService,
   ) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
@@ -143,6 +145,7 @@ export class SchemaComponent implements OnInit{
 
   ngOnInit(): void {
     this.elements = this.schemaService.elements;
+    this.apiService.getTypes();
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;
