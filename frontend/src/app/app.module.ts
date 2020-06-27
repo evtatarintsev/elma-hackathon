@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { SchemaComponent } from './schema/schema.component';
@@ -60,7 +61,7 @@ import { ModalComponent } from './modal/modal.component';
   imports: [
     ReactiveFormsModule,
     FormsModule,
-
+    HttpClientModule,
     ClipboardModule,
     DragDropModule,
     MatBottomSheetModule,

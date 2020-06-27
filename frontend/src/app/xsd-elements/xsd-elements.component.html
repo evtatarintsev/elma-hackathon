@@ -1,4 +1,4 @@
 <mat-list>
-    <mat-list-item *ngFor="let t of xsdTypes">{{t.name}}</mat-list-item>
+    <mat-list-item *ngFor="let type of (types$ | async)">{{type.name}}</mat-list-item>
 </mat-list>
 <button mat-icon-button (click)="addNewElement()"><mat-icon>add</mat-icon> Добавить элемент</button>

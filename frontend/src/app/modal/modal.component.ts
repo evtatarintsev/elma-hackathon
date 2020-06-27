@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SchemaService} from '../shared/schema.service';
 import {FormControl} from '@angular/forms';
-import {xsdType} from '../schema/schema.component';
+import {Type} from '../models/type';
 
 @Component({
   selector: 'app-modal',
@@ -19,7 +19,7 @@ export class ModalComponent implements OnInit {
   }
 
   addType(): void{
-    const type: xsdType = {
+    const type: Type = {
       name: this.xsdType.value,
       version: 0,
     };

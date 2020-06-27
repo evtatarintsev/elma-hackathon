@@ -2,22 +2,11 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component, Injectable, OnInit} from '@angular/core';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {SchemaService} from '../shared/schema.service';
-
-
-export interface Element {
-  name: string;
-  type: string;
-}
-
-export interface xsdType {
-  name: string;
-  elements?: Element[];
-  editable?: boolean;
-  version: number;
-  updated?: Date;
-}
+import {ApiService} from '../shared/api.service';
+import {Element} from '../models/element'
+import {Type} from '../models/type'
 
 
 /**
@@ -138,17 +127,14 @@ export class SchemaComponent implements OnInit{
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  element: Element = {
-    type: '',
-    name: '',
-  };
-
   elements: Element[];
-  types: xsdType[];
+  types$: Observable<Array<Type>>;
+  element: string;
 
   constructor(
       private _database: ChecklistDatabase,
       private schemaService: SchemaService,
+      private apiService: ApiService,
   ) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
@@ -161,7 +147,7 @@ export class SchemaComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.types = this.schemaService.types;
+    this.types$ = this.apiService.getTypes();
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;
