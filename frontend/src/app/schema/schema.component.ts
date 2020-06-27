@@ -90,7 +90,6 @@ export class ChecklistDatabase {
   }
 
   updateItem(node: TodoItemNode, item: Element) {
-    debugger;
     node.item = item;
     this.dataChange.next(this.data);
   }
@@ -157,7 +156,7 @@ export class SchemaComponent implements OnInit{
 
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === {type:'', name:''};
+  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item.type === '';
 
   /**
    * Transformer to convert nested node to flat node. Record the nodes in maps for later use.

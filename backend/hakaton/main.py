@@ -1,6 +1,8 @@
+import io
+
 import click
 from flask import Flask
-from flask import request, make_response
+from flask import request, make_response, send_file
 from flask.cli import with_appcontext
 from marshmallow import ValidationError
 
@@ -55,6 +57,13 @@ def export_type(name: str):
     response = make_response(to_xsd(type))
     response.headers['Content-Type'] = 'application/xml'
     return response
+
+
+@app.route('/api/types/<string:name>/export/xsd/save', methods=['GET', ])
+def export_save_type(name: str):
+    type = services.get_type(name)
+    xsd = io.BytesIO(to_xsd(type).encode())
+    return send_file(xsd, as_attachment=True, attachment_filename='type.xsd')
 
 
 @app.teardown_appcontext
