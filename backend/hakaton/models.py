@@ -32,3 +32,13 @@ class Type:
 
     def dump_elements(self) -> str:
         return json.dumps([{"name": el.name, "type": el.type} for el in self.elements])
+
+
+@dataclass
+class Diff:
+    saved: List[Element]
+    draft: List[Element]
+
+    @property
+    def is_empty(self) -> bool:
+        return not self.saved and not self.draft
