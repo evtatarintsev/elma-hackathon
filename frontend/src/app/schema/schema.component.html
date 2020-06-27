@@ -32,7 +32,7 @@
         <span *ngIf="node.item.name" class="item-node">{{node.item.name}} ({{node.item.type}} )</span>
         <span *ngIf="!node.item.name" class="item-node">{{node.item.type}}</span>
 
-        <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+        <button *ngIf="node.level===0" mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
     </mat-tree-node>
 </mat-tree>
 
